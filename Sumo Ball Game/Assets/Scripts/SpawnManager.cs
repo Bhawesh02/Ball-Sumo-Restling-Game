@@ -5,16 +5,20 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    private float spawnRange = 9.0f;
-    public int enemyCount ;
+    public GameObject powerUpPrefab;
+    public int enemyCount;
     public int waveNumber = 1;
-
+    private float powerUpSpawnTime = 5.0f;
+    private float spawnRange = 9.0f;
+    public bool powerUPExsit = false;
+    
     
 
     // Start is called before the first frame update
     void Start()
     {
         SpawnenemyWave(waveNumber);
+        Invoke("SpawnPowerUP",Random.Range(0,powerUpSpawnTime));
     }
 
     // Update is called once per frame
@@ -35,6 +39,17 @@ public class SpawnManager : MonoBehaviour
         {
             Instantiate(enemyPrefab, GenerateSpawnPos(), enemyPrefab.transform.rotation);
         }
+    }
+    private  void SpawnPowerUP()
+    {
+        if (!powerUPExsit)
+        {
+            Instantiate(powerUpPrefab, GenerateSpawnPos(), powerUpPrefab.transform.rotation);
+            powerUPExsit = true;
+            
+        }
+        Invoke("SpawnPowerUP", Random.Range(0, powerUpSpawnTime));
+
     }
 
 
