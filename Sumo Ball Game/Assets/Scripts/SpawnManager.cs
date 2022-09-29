@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public GameObject powerUpPrefab;
+    public GameObject[] enemyPrefab;
+    public GameObject[] powerUpPrefab;
     public int enemyCount;
+    public List<GameObject> enemys = new List<GameObject>();
     public int waveNumber = 1;
     private float powerUpSpawnTime = 5.0f;
     private float spawnRange = 9.0f;
@@ -24,6 +25,7 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    
         enemyCount = FindObjectsOfType<Enemy>().Length;
 
         if (enemyCount == 0)
@@ -35,16 +37,20 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnenemyWave(int enemyNum = 3)
     {
+        enemys.Clear();
         for (int i = 0; i < enemyNum; i++)
         {
-            Instantiate(enemyPrefab, GenerateSpawnPos(), enemyPrefab.transform.rotation);
+            int enemyNo = Random.Range(0, enemyPrefab.Length);
+            GameObject newEnemy = Instantiate(enemyPrefab[enemyNo], GenerateSpawnPos(), enemyPrefab[enemyNo].transform.rotation);
+            enemys.Add(newEnemy);
         }
     }
     private  void SpawnPowerUP()
     {
         if (!powerUPExsit)
         {
-            Instantiate(powerUpPrefab, GenerateSpawnPos(), powerUpPrefab.transform.rotation);
+            int powerUpNo = Random.Range(0,powerUpPrefab.Length);
+            Instantiate(powerUpPrefab[powerUpNo], GenerateSpawnPos(), powerUpPrefab[powerUpNo].transform.rotation);
             powerUPExsit = true;
             
         }
