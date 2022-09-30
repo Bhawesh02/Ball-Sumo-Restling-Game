@@ -8,14 +8,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     private GameObject focalPoint;
     private GameObject spawnManger;
-    
-    private SpawnManager spawn;
-    
+    private SpawnManager spawn;    
     private float powerUpStrenght = 15.0f;
     private float projectileSpeed = 3.5f;
     private bool canLauchProjectile = false;
-    private Vector3 refrencePos;
-
+    private bool canJump = false;
+    public bool jumped = false;
+    
 
     public float powerupTime = 5.0f;
     public List<GameObject> projectileLaunchers = new List<GameObject>();
@@ -23,6 +22,9 @@ public class PlayerController : MonoBehaviour
     public bool hasPowerUp = false;
     public GameObject powerupIndicator;
     public GameObject projectileLauncher;
+    public float jumpForce = 15.0f;
+    public float smashForce = 25.0f;
+    public bool onGround;
 
 
 
@@ -45,22 +47,29 @@ public class PlayerController : MonoBehaviour
          
 
 
-        if (canLauchProjectile)
+        
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (canLauchProjectile)
             {
                 LaunchProjectile();
             }
+            else if (canJump)
+          {
+                if (onGround)
+                {
+                    StartCoroutine(Smash());
+                }
+                
+          }
+
         }
-
-
 
     }
 
 
     private void LaunchProjectile()
     {
-        refrencePos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 5);
 
         for (int i = 0; i < spawn.enemyCount; i++)
         {
@@ -84,11 +93,28 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
+    IEnumerator Smash()
+    {
+        playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        onGround = false;
+        yield return new WaitUntil(() => onGround);
+        Debug.Log("Landed");
+        for (int i = 0; i < spawn.enemyCount; i++)
+        {
+            if (spawn.enemys[i] != null)
+            {
+                Vector3 enemyPos = new Vector3(spawn.enemys[i].transform.position.x, spawn.enemys[i].transform.position.y, spawn.enemys[i].transform.position.z);
+                float disbBtw = Vector3.Distance(enemyPos,transform.position);
+                Vector3 emeyDirec = (enemyPos - transform.position).normalized;
+                Rigidbody enemyRb = spawn.enemys[i].GetComponent<Rigidbody>();
+                enemyRb.AddForce(emeyDirec * (smashForce - disbBtw),ForceMode.Impulse);
+            }
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("PowerUp") || other.CompareTag("PowerUp1"))
+        if(other.CompareTag("PowerUp") || other.CompareTag("PowerUp1") || other.CompareTag("PowerUp2"))
         {
             Destroy(other.gameObject);
             powerupIndicator.SetActive(true);
@@ -97,11 +123,14 @@ public class PlayerController : MonoBehaviour
             {
                 hasPowerUp = true;
             }
-            else
+            else if (other.CompareTag("PowerUp1"))
             {
                 canLauchProjectile = true;
             }
-            
+            else
+            {
+                canJump = true;
+            }
             StartCoroutine(PowerupCountdownRoutine());
 
         }
@@ -112,7 +141,8 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(powerupTime);
         powerupIndicator.SetActive(false);
         canLauchProjectile = false;
-        hasPowerUp = false; 
+        hasPowerUp = false;
+        canJump = false;
     }
 
 

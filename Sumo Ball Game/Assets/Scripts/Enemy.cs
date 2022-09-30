@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Vector3 towardsDsit = (player.transform.position - transform.position).normalized;
+        towardsDsit.y = 0;
         enemyRb.AddForce(towardsDsit * speed);
 
         if (transform.position.y < -10)
