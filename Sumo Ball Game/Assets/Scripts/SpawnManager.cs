@@ -6,9 +6,13 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject[] enemyPrefab;
     public GameObject[] powerUpPrefab;
+    public GameObject[] miniBossPrefab;
     public int enemyCount;
     public List<GameObject> enemys = new List<GameObject>();
     public int waveNumber = 1;
+    public int miniBossEveryWave = 3;
+    
+    
     private float powerUpSpawnTime = 5.0f;
     private float spawnRange = 9.0f;
     public bool powerUPExsit = false;
@@ -31,10 +35,20 @@ public class SpawnManager : MonoBehaviour
         if (enemyCount == 0)
         {
             waveNumber++;
-            SpawnenemyWave(waveNumber);
+            if (waveNumber % miniBossEveryWave != 0)
+                SpawnenemyWave(waveNumber);
+            else
+                SpawnMiniBoss();
         }
     }
 
+    void SpawnMiniBoss()
+    {
+        enemys.Clear();
+        int miniBossNo = Random.Range(0, miniBossPrefab.Length);
+        GameObject newEnemy = Instantiate(miniBossPrefab[miniBossNo], GenerateSpawnPos(), miniBossPrefab[miniBossNo].transform.rotation);
+        enemys.Add(newEnemy);
+    }
     private void SpawnenemyWave(int enemyNum = 3)
     {
         enemys.Clear();
@@ -59,7 +73,7 @@ public class SpawnManager : MonoBehaviour
     }
 
 
-    private Vector3 GenerateSpawnPos()
+    public Vector3 GenerateSpawnPos()
     {
         float spawnRangeX = Random.Range(-spawnRange, spawnRange);
         float spawnRangeZ = Random.Range(-spawnRange, spawnRange);

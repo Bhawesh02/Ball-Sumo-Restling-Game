@@ -368,9 +368,14 @@ MonoBehaviour:
   - {fileID: 6885275672596999181, guid: 5a234e0a768b9924a810fb415ecb049b, type: 3}
   - {fileID: 5585751307689877710, guid: 4fd853e48c9ea964c947bd89445f96ca, type: 3}
   - {fileID: 5585751307689877710, guid: 9a3399079d142314b9ebc021a45347bd, type: 3}
+  miniBossPrefab:
+  - {fileID: 32738981822468114, guid: 28952c8a3f3772c4a8d99952a09025cc, type: 3}
+  - {fileID: 8304223547771582515, guid: df28297de71e0a747b8f8466fe089585, type: 3}
+  - {fileID: 928915163897283523, guid: 764beee63df1d514baccdb3f708ee1a0, type: 3}
   enemyCount: 0
   enemys: []
   waveNumber: 1
+  miniBossEveryWave: 3
   powerUPExsit: 0
 --- !u!4 &352566942
 Transform:

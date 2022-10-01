@@ -155,9 +155,15 @@ public class PlayerController : MonoBehaviour
             Vector3 awayDirec = collision.gameObject.transform.position - transform.position;
             enemyRb.AddForce(awayDirec * powerUpStrenght, ForceMode.Impulse);
         }
-    }
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(collision.gameObject.transform.parent.gameObject);
+        }
 
-    public static float AngleFromToPoint(Vector3 fromPoint,
+    }
+    
+
+    public float AngleFromToPoint(Vector3 fromPoint,
                                      Vector3 toPoint,
                                      Vector3 zeroDirection)
     {
@@ -167,4 +173,6 @@ public class PlayerController : MonoBehaviour
         return angle < 0 ? angle + 360 : angle;
     }
 
+
+    
 }

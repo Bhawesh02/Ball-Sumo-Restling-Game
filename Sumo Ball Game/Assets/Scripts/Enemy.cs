@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 3.0f;
+    public float speed = 3.5f;
     private Rigidbody enemyRb;
     private GameObject player;
     // Start is called before the first frame update
@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
                 }
     }
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Projectile"))
         {
